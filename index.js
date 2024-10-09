@@ -192,11 +192,43 @@ const getRandomCharacterInfo = async () => {
         if (!secondResponse.ok) {
             throw new Error (`Error HTTP: ${secondResponse.status} - ${secondResponse.statusText}`);
         }
-        let firstEpisodeName = await fetch (secondResponse);
+        let firstEpisodes = await fetch (secondResponse);
+        let firstEpisodeName = secondResponse.name;
         let airDate = secondData.air_date;
-        return {img, name, episodes, firstEpisodeName, airDate, episodeLength};
+        return {img, name, episodes, firstEpisodes, firstEpisodeName, airDate, episodeLength};
     } catch (error) {
         console.error('Hubo un problema con la solicitud:', error.message);
     }
 }
 
+// EJERCICIO 09
+
+async function getRandomCharacterInfo(){
+    try {
+      let data = await getRandomCharacter();
+  
+      let img = data.image;
+      let name = data.name;
+      let episodes = data.episode;
+      console.log(episodes);
+      let episodesLength = episodes.length;
+      let firstEpisodeUrl = episodes[0];
+      console.log(firstEpisodeUrl)
+      let datosPrimerEpisodio = await fetch(firstEpisodeUrl);
+  
+      let datosFecha = await datosPrimerEpisodio.json();
+      let firstEpisode = datosFecha.name;
+  
+      let dateEpisode = datosFecha.air_date;
+      console.log(dateEpisode)
+  
+  
+  
+      return {img, name, episodes, dateEpisode, firstEpisode, episodesLength}
+  
+    } catch (error) {
+      // Manejar errores de red o del servidor
+      console.error('Hubo un problema con la solicitud:', error.message);
+    }
+}
+// IM DONE
