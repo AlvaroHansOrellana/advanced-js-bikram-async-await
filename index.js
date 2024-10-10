@@ -119,18 +119,18 @@ const getRandomPokemonImage = async () => {
 //             let container = document.createElement('div');
 //             container.setAttribute('id', 'pug-vs-pikachu');
 //             container.style.display = 'flex';
-        
+
 //             for (let i = 0; i < images.length; i++) {
 //                 const { src, alt, width } = images[i];
 //                 container.appendChild(createImageElement(src, alt, width));
 //             }
-        
+
 //             return container;
 //         };
-        
+
 //         let dogImageElement = document.createElement('img');
 //         dogImageElement.src = dogImg;
-         
+
 //         let vsImageElement = document.createElement('img');
 //         vsImageElement.src = vs;
 
@@ -154,18 +154,18 @@ const getRandomPokemonImage = async () => {
 
 async function getRandomCharacter() {
     try {
-      let response = await fetch(`https://rickandmortyapi.com/api/character/${Math.floor(Math.random() * 827)}`)
-  
-      let data = await response.json();
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
-      }
-      return data
+        let response = await fetch(`https://rickandmortyapi.com/api/character/${Math.floor(Math.random() * 827)}`)
+
+        let data = await response.json();
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+        }
+        return data
     } catch (error) {
-      // Manejar errores de red o del servidor
-      console.error('Hubo un problema con la solicitud:', error.message);
+        // Manejar errores de red o del servidor
+        console.error('Hubo un problema con la solicitud:', error.message);
     }
-  }
+}
 
 
 //   Ejercicio 8.- Declara una función getRandomCharacterInfo que retorne de un personaje su imagen, nombre, episodios en los que aparece y el nombre del primer episodio en el que aparece + fecha de estreno, tendrás que hacer otro fetch para llegar a los ultimos datos. Formato de retorno => (return {img, name, episodes, firstEpisode, dateEpisode})
@@ -175,7 +175,7 @@ const getRandomCharacterInfo = async () => {
         let response = await fetch('https://rickandmortyapi.com/api/character/4');
         const data = await response.json();
         if (!response.ok) {
-            throw new Error (`Error HTTP: ${response.status} - ${response.statusText}`);
+            throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
         }
         let img = data.image;
         console.log(img)
@@ -187,15 +187,15 @@ const getRandomCharacterInfo = async () => {
         let firstEpisode = data.episode[0]
         console.log(firstEpisode)
 
-        let secondResponse = await fetch ('https://rickandmortyapi.com/api/episode/6');
+        let secondResponse = await fetch('https://rickandmortyapi.com/api/episode/6');
         const secondData = await secondResponse.json();
         if (!secondResponse.ok) {
-            throw new Error (`Error HTTP: ${secondResponse.status} - ${secondResponse.statusText}`);
+            throw new Error(`Error HTTP: ${secondResponse.status} - ${secondResponse.statusText}`);
         }
-        let firstEpisodes = await fetch (secondResponse);
+        let firstEpisodes = await fetch(secondResponse);
         let firstEpisodeName = secondResponse.name;
         let airDate = secondData.air_date;
-        return {img, name, episodes, firstEpisodes, firstEpisodeName, airDate, episodeLength};
+        return { img, name, episodes, firstEpisodes, firstEpisodeName, airDate, episodeLength };
     } catch (error) {
         console.error('Hubo un problema con la solicitud:', error.message);
     }
@@ -203,32 +203,65 @@ const getRandomCharacterInfo = async () => {
 
 // EJERCICIO 09
 
-async function getRandomCharacterInfo(){
+async function getRandomCharacterInfo() {
     try {
-      let data = await getRandomCharacter();
-  
-      let img = data.image;
-      let name = data.name;
-      let episodes = data.episode;
-      console.log(episodes);
-      let episodesLength = episodes.length;
-      let firstEpisodeUrl = episodes[0];
-      console.log(firstEpisodeUrl)
-      let datosPrimerEpisodio = await fetch(firstEpisodeUrl);
-  
-      let datosFecha = await datosPrimerEpisodio.json();
-      let firstEpisode = datosFecha.name;
-  
-      let dateEpisode = datosFecha.air_date;
-      console.log(dateEpisode)
-  
-  
-  
-      return {img, name, episodes, dateEpisode, firstEpisode, episodesLength}
-  
+        let data = await getRandomCharacter();
+
+        let img = data.image;
+        let name = data.name;
+        let episodes = data.episode;
+        console.log(episodes);
+        let episodesLength = episodes.length;
+        let firstEpisodeUrl = episodes[0];
+        console.log(firstEpisodeUrl)
+        let datosPrimerEpisodio = await fetch(firstEpisodeUrl);
+
+        let datosFecha = await datosPrimerEpisodio.json();
+        let firstEpisode = datosFecha.name;
+
+        let dateEpisode = datosFecha.air_date;
+        console.log(dateEpisode)
+
+
+
+        return { img, name, episodes, dateEpisode, firstEpisode, episodesLength }
+
     } catch (error) {
-      // Manejar errores de red o del servidor
-      console.error('Hubo un problema con la solicitud:', error.message);
+        // Manejar errores de red o del servidor
+        console.error('Hubo un problema con la solicitud:', error.message);
     }
 }
 // IM DONE
+
+//Ejercicio 9. Pintar en el dom las tarjetas de personaje. ++++++++++++++++++++ 
+async function pintarEnElDom() {
+    let dat = await getRandomCharacterInfo();
+    console.log(dat);
+  
+    //Pintamos la tarjeta de personaje en el dom:
+    //empezamos creando los elementos section, ul, li, img
+    let section = document.createElement("section");
+    let ul = document.createElement("ul");
+    let li = document.createElement("li");
+    let img = document.createElement("img");
+    img.src = dat.img;
+    //creamos los contenedores de texto, <p>
+    let nombrePersonaje = document.createElement("p");
+    nombrePersonaje.textContent = (`${dat.name}`);
+    let episodiosPersonaje = document.createElement("p");
+    episodiosPersonaje.textContent = (`Número de episodios en los que sale: ${dat.episodesLength}`);
+    let primerEpisodio = document.createElement("p");
+    primerEpisodio.textContent = (`Primera aparición en la serie: ${dat.firstEpisode}`);
+    //append de p al li
+    li.appendChild(nombrePersonaje);
+    li.appendChild(img);
+    li.appendChild(episodiosPersonaje);
+    li.appendChild(primerEpisodio);
+    //append de lis al ul
+    ul.appendChild(li);
+    section.appendChild(ul);
+    //append del container al body
+    document.body.appendChild(section);
+  
+  }
+  pintarEnElDom();
